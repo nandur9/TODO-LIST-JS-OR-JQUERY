@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo List</title>
+  <style>
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button id="addTaskBtn">Add Task</button>
+  <ul id="taskList"></ul>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      function addTask() {
+        var taskInput = $('#taskInput');
+        var task = taskInput.val().trim();
+
+        if (task !== '') {
+          var listItem = $('<li>').text(task);
+          var editBtn = $('<button>').text('Edit');
+          var deleteBtn = $('<button>').text('Delete');
+          var saveBtn = $('<button>').text('Save').hide();
+          var cancelBtn = $('<button>').text('Cancel').hide();
+
+          // Add event listener to the edit button
+          editBtn.on('click', function() {
+            var currentTask = listItem.text();
+            taskInput.val(currentTask);
+            editBtn.hide();
+            deleteBtn.hide();
+            saveBtn.show();
+            cancelBtn.show();
+          });
+
+          // Add event listener to the delete button
+          deleteBtn.on('click', function() {
+            listItem.remove();
+          });
+
+          // Add event listener to the save button
+          saveBtn.on('click', function() {
+            var updatedTask = taskInput.val().trim();
+            if (updatedTask !== '') {
+              listItem.text(updatedTask);
+              taskInput.val('');
+              editBtn.show();
+              deleteBtn.show();
+              saveBtn.hide();
+              cancelBtn.hide();
+            }
+          });
+
+          // Add event listener to the cancel button
+          cancelBtn.on('click', function() {
+            taskInput.val('');
+            editBtn.show();
+            deleteBtn.show();
+            saveBtn.hide();
+            cancelBtn.hide();
+          });
+
+          // Append buttons to the list item
+          listItem.append(editBtn, deleteBtn, saveBtn, cancelBtn);
+          $('#taskList').append(listItem);
+          taskInput.val('');
+        }
+      }
+
+      $('#addTaskBtn').on('click', function() {
+        addTask();
+      });
+
+      $('#taskInput').on('keypress', function(event) {
+        if (event.which === 13) {
+          addTask();
+        }
+      });
+
+      $('#taskList').on('click', 'li', function() {
+        $(this).toggleClass('completed');
+      });
+    });
+  </script>
+</body>
+</html>
